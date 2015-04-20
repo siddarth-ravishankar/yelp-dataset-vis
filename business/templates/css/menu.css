@@ -1,0 +1,72 @@
+#menu {
+	position: fixed;
+	top: 50px;
+	width: 0px;
+	height: 100%;
+	background-color: rgba(246, 246, 246, 0.94);
+	z-index: 2;
+    overflow: hidden;
+}
+
+#menu .close-button {
+	float: right;
+	padding: 10px;
+	height: 50px;
+	width: 50px;
+	z-index: 2;
+	display: block;
+}
+
+#menu #filter-businesses-button {
+	position: fixed;
+	margin: 10px 10px 0px 10px;
+	height: 40px;
+	width: 250px;
+	background: rgb(247, 247, 247);
+	text-align:center;
+	border-radius: 10px;
+}
+
+#menu #filter-businesses-button a{
+	font-family: "Lucida Sans Unicode";
+    font-size: 18px;
+    text-decoration: none;
+    display: block;
+    color: rgb(100,100,100);
+    text-shadow: 2px 2px #EAEAEA;
+    padding-top: 2.5px;
+}
+
+#menu #filter-businesses-button a span{
+	padding-top: 5px;
+	padding-left: 10px;
+}
+
+#menu #filter-menu-container {
+	background: rgb(247, 247, 247);
+	display: block;
+	left: 10px;
+	top: 50px;
+	position: absolute;
+	max-height: 500px;
+	max-width: 600px;
+	height: 0px;
+	width: 0px;
+	overflow: hidden;
+	border-radius: 20px;
+}
+
+#menu #filter-menu-container table{
+	margin: 10px;
+	width: 100%;
+}
+
+#menu #filter-menu-container table tr{
+	width: 100%;
+	height: 40px;
+}
+
+#menu #filter-menu-container a{
+	text-decoration: none;
+	color: rgb(100,100,100);
+}
