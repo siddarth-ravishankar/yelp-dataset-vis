@@ -4,7 +4,7 @@
 	top: 50px;
 	width: 350px;
 	height: 0px;
-	max-height: 550px;
+	max-height: 580px;
 	background-color: rgba(246, 246, 246, 0.94);
 	z-index: 2;
     overflow: hidden;
@@ -92,6 +92,7 @@
 	display: block;
 }
 
+/* 
 #info-view #clustered-info-view #name {
 	padding: 10px 10px 0px 10px;
 	font-family: "Lucida Sans Unicode";
@@ -102,3 +103,4 @@
     color: rgb(100,100,100);
     text-shadow: 2px 2px #EAEAEA;
 }
+ */

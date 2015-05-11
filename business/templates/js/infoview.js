@@ -1,27 +1,26 @@
 var selectedBusinessTitle = "Show Info";
 
-function toggleInfoView () {
+function toggleInfoView() {
 	d3.select("#info-view-toggle-button-text").style("display", "block");
-	var infoViewToggleButtonText = "Hide Info";
 	var infoViewToggleButtonIconClass = "glyphicon glyphicon-collapse-up";
 	var infoViewHeight = d3.select("#info-view").style("max-height");
 	if ( parseInt(d3.select("#info-view").style("height")) > 0) {
 		infoViewHeight = "0px";
-		infoViewToggleButtonText = selectedBusinessTitle;
 		infoViewToggleButtonIconClass = "glyphicon glyphicon-collapse-down";
 	}
 	d3.select("#info-view").transition().duration(1000).style("height", infoViewHeight);
-	d3.select("#info-view-toggle-button-text").select("div").text(infoViewToggleButtonText);
+	d3.select("#info-view-toggle-button-text").select("div").text(selectedBusinessTitle);
 	d3.select("#info-view-toggle-button-text").select("span").attr("class", infoViewToggleButtonIconClass);
 }
 
-function isInfoViewOpen () {
+function isInfoViewOpen() {
 	return ( parseInt(d3.select("#info-view").style("height")) > 0)
 }
 
 function displayBusinessDetails (business) {
 
 	selectedBusinessTitle = business['name'];
+	d3.select("#info-view-toggle-button-text").select("div").text(selectedBusinessTitle);
 
 	d3.select("#individual-info-view").style("display", "block");
 	d3.select("#clustered-info-view").style("display", "none");
@@ -69,11 +68,12 @@ function displayClusteredBusinessDetails (responseObject) {
 		toggleInfoView();
 	}
 		
-	d3.select("#clustered-info-view").select("#name").text(responseObject['count'] + " businesses here");
+// 	d3.select("#clustered-info-view").select("#name").text(responseObject['count'] + " businesses here");
 	selectedBusinessTitle = responseObject['count'] + " businesses here";
+	d3.select("#info-view-toggle-button-text").select("div").text(selectedBusinessTitle);
 	
-	addPriceDistributionBarChart(responseObject['rating_with_price_range_info']);
-	addRatingsDistributionBarChart(responseObject['rating_with_price_range_info']);
+	updatePriceDistributionBarChart(responseObject);
+	updateRatingsDistributionBarChart(responseObject);
 	
 	console.log(responseObject['count']);
 	console.log(responseObject);

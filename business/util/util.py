@@ -66,7 +66,4 @@ def get_master_category_for_categories (categories, businesses_in_category):
 		if category_cluster_group[category] in businesses_in_category or len(businesses_in_category) == len(master_category_keywords)-1:
 			master_categories_count[category_cluster_group[category]] += 1
 		
-# 	print "%s -> %s" %(categories, max(master_categories_count.iteritems(), key = lambda (k, v): (v))[0])
-# 	raw_input()
-	
 	return max(master_categories_count.iteritems(), key = lambda (k, v): (v))[0]

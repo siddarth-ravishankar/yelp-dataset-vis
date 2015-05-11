@@ -11,7 +11,7 @@ function createRequestURL ( requestName, attributesDictionary ) {
 	return requestURL.substring(0, requestURL.length-1);
 }
 
-function createBusinessMarkerForClusteredBusinesses (responseObject) {
+function createBusinessMarkerForClusteredBusinesses (responseObject, index) {
 
 	var customClusterIcon = L.icon({
 		iconUrl: 'static/images/markers/marker-cluster.png',
@@ -21,10 +21,25 @@ function createBusinessMarkerForClusteredBusinesses (responseObject) {
 	});
 	
 	var clusteredMarker = new L.marker([responseObject['latitude'], responseObject['longitude']], {icon: customClusterIcon });
-	clusteredMarker.bindPopup("<a style='text-decoration: none;' href='#' onclick='explore(" + responseObject['boundary']['north'] + "," + responseObject['boundary']['west'] + "," + responseObject['boundary']['south'] + "," + responseObject['boundary']['east'] + "); return false;'>Explore</a> this place");
-	clusteredMarker.on('click', function(e) {
-		displayClusteredBusinessDetails (responseObject);
+	clusteredMarker.bindPopup(responseObject['count'] + " businesses here<br>Double click to explore", {offset: [0,-8] } );
+	clusteredMarker.on('click', function(e) {		
+		if (compareBusinessesEnabled) {
+			
+		}
+		else {
+			displayClusteredBusinessDetails (responseObject);
+			selectedClusterId = index;
+		}
 	});
+	clusteredMarker.on('dblclick', function(e) {
+		explore(responseObject['boundary']['north'], responseObject['boundary']['west'], responseObject['boundary']['south'], responseObject['boundary']['east']);
+	});
+	clusteredMarker.on('mouseover', function (e) {
+		this.openPopup();
+	});
+	clusteredMarker.on('mouseout', function (e) {
+		this.closePopup();
+	});	
 	return clusteredMarker;
 }
 
@@ -50,14 +65,46 @@ function createBusinessMarkersForIndividualBusinesses (responseObject) {
 		});
 
 		var businessMarker = new L.marker([business['latitude'], business['longitude']], {id: i, icon: customBusinessIcon });
-		businessMarker.bindPopup(business['name']);
+		businessMarker.bindPopup(business['name'] + "<br>" + getRatingsDivTextForPopUpView (business), {offset: [0,-8] });
 		businessMarker.on('click', function(e) {
-			displayBusinessDetails (businesses[e.target.options.id]);
+			if (compareBusinessesEnabled) {
+				addToCompareBusinessesTable (businesses[e.target.options.id]);
+			}
+			else {
+				displayBusinessDetails (businesses[e.target.options.id]);
+			}			
 			console.log(businesses[e.target.options.id])
+		});		
+		businessMarker.on('mouseover', function (e) {
+			this.openPopup();
+		});
+		businessMarker.on('mouseout', function (e) {
+			this.closePopup();
 		});
 		businessMarkers.push(businessMarker);
 	}
 	return businessMarkers;
+}
+
+function getRatingsDivTextForPopUpView (business) {
+	
+	var starRatingText = "";
+	var ratingValue = business['stars'];
+	
+	for(var i=0; i<5; i++) {
+		var starImageUrl = "star_zero.png";
+		if (ratingValue >= 1) {
+			starImageUrl = "star_full.png";
+		}
+		else if (ratingValue == 0.5) {
+			starImageUrl = "star_half.png";
+		}
+		ratingValue -= 1;
+		
+		starRatingText += "<img src='static/images/" + starImageUrl + "' height=15px width=15px/>";
+	}
+	
+	return starRatingText;
 }
 
 function explore (north, west, south, east) {

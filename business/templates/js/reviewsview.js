@@ -246,10 +246,13 @@ function addReviewsBarChart (responseArray) {
 		d3.select("#reviews-distribution-barchart").html("");
 		
 		var ratingsArray = [0, 0, 0, 0, 0];
+		var maxRatingCount = 0;
 		for (var i=0; i<responseArray.length; i++) {
 			if(responseArray[i]['stars'])
 				ratingsArray[responseArray[i]['stars']-1]++;
+				maxRatingCount = Math.max(maxRatingCount, ratingsArray[responseArray[i]['stars']-1]);
 		}
+		maxRatingCount *= 1.08;
 		
 		var svgWidth = parseInt(d3.select("#reviews-distribution-barchart").style("width"))-10;
 		var svgHeight = parseInt(d3.select("#reviews-distribution-barchart").style("height"))-10;
@@ -262,9 +265,9 @@ function addReviewsBarChart (responseArray) {
 		.selectAll("rect").data(ratingsArray).enter()
 		.append("rect").attr({
 			x: function(d,i) { return yAxisWidth + i * (svgWidth-yAxisWidth) / ratingsArray.length + 2.5 },
-			y: function(d) { return (svgHeight-xAxisHeight) - (d / responseArray.length) * (svgHeight-xAxisHeight) },
+			y: function(d) { return (svgHeight-xAxisHeight) - (d / maxRatingCount) * (svgHeight-xAxisHeight) },
 			width: Math.ceil( (svgWidth-yAxisWidth) / ratingsArray.length - 5),
-			height: function(d) { return (d / responseArray.length) * (svgHeight-xAxisHeight) }
+			height: function(d) { return (d / maxRatingCount) * (svgHeight-xAxisHeight) }
 		})
 		.style({"fill":"steelblue"});
 			 
@@ -273,7 +276,7 @@ function addReviewsBarChart (responseArray) {
 		.selectAll("text").data(ratingsArray).enter()
 		.append("text").attr({
 			 x: function(d,i) { return yAxisWidth + i * (svgWidth-yAxisWidth) / ratingsArray.length + (44-d.toString().length*4)/2},
-			 y: function(d) { return (svgHeight-xAxisHeight) - (d / responseArray.length) * (svgHeight-xAxisHeight) + 10 },
+			 y: function(d) { return (svgHeight-xAxisHeight) - (d / maxRatingCount) * (svgHeight-xAxisHeight) + 10 },
 			 })
 		.text(function(d) { if(d>0)return d; else return "";})
 		.style({"font-size":"10px","fill":"white"});

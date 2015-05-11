@@ -1,3 +1,4 @@
+var selectedClusterId = -1;
 var map = L.map('map').setView([40, -100], 4);
 var latLngBounds = map.getBounds();
 var markersGroup = new L.MarkerClusterGroup();
@@ -19,12 +20,15 @@ getBusinessesInBounds (map.getBounds());
 function getBusinessesInBounds (latLngBounds) {
 
 	var requestName = "get_businesses"	
-	var attributesDictionary = {'north':latLngBounds.getNorth(), 'east':latLngBounds.getEast(), 'south':latLngBounds.getSouth(), 'west':latLngBounds.getWest(), 'business-categories':''};
+	var attributesDictionary = {'north':latLngBounds.getNorth(), 'east':latLngBounds.getEast(), 'south':latLngBounds.getSouth(), 'west':latLngBounds.getWest(), 'business-categories':'', 'price-range':priceRange, 'rating-range': ratingRange, 'include-non-priced-businesses':false};
 	
 	var selectedBusinessesString = "";
 	for (var i=0; i<selectedBusinesses.length; i++) {
 		attributesDictionary['business-categories'] += selectedBusinesses[i].replace(/&/g, "_amp_") + ",";
 	}
+	
+	console.log("Attributes dictionary");
+	console.log(attributesDictionary);
 	
 	d3.json(createRequestURL(requestName, attributesDictionary), function(error, json) {
 
@@ -32,8 +36,7 @@ function getBusinessesInBounds (latLngBounds) {
 			copyCurrentBusinessesListToSelectedBusinessesList();
 			return console.warn(error);
 		}
-			
-			
+
 		copySelectedBusinessesListToCurrentBusinessesList();
 			
 		responseArray = json['response_object']
@@ -45,7 +48,7 @@ function getBusinessesInBounds (latLngBounds) {
 		for(var i=0; i<responseArray.length; i++) {
 							
 			if (responseArray[i]['type'] == 'clustered') {
-				var businessMarker = createBusinessMarkerForClusteredBusinesses (responseArray[i]);
+				var businessMarker = createBusinessMarkerForClusteredBusinesses (responseArray[i], i);
 				markersGroup.addLayer(businessMarker);
 			}
 			else {
@@ -55,5 +58,15 @@ function getBusinessesInBounds (latLngBounds) {
 			
 		}						
 		map.addLayer(markersGroup);
+		
+		if ( isInfoViewOpen() ) {
+			if (selectedClusterId != -1 && responseArray[selectedClusterId]['type'] == 'clustered') {
+				displayClusteredBusinessDetails (responseArray[selectedClusterId]);
+			}
+			else {
+				toggleInfoView();			
+			}
+		}
+		
 	});
 }

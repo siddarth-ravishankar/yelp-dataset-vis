@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="Interactive visualization of Yelp Dataset">
+		<meta name="author" content="Siddarth Ravishankar">
+		
+        <title>Compare Businesses</title>
+        
+        {% load staticfiles %}
+		<link rel="stylesheet" href="{% static "css/comparebusinesses.css" %}" />
+		<link rel="stylesheet" href="{% static "css/dragtable.css" %}" />
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    </head>
+    <body>
+		<div id="comparison-section">
+			<a href="#" onclick="displayComparisonTable(); return false;"><div id="comparison-table-heading" class="heading-selected">Comparison Table</div></a>
+			<div id="comparison-table-section">
+				<table id="comparison-table">
+					<thead>
+						<tr>
+							<th>Attributes</th>
+							{% for business in businesses_array %}
+								<th class="accept">{{business.name}}</th>
+							{% endfor %}
+						</tr>
+					</thead>
+					<tbody>
+						{% for attributes_row in attributes_comparison_table %}
+							<tr>
+								<script>
+									var col = 0, currentRowTitle = "";
+									{% for attribute in attributes_row %}
+										var alignment = "center";
+										if (col == 0) { currentRowTitle = "{{attribute}}"; alignment = "left";}
+										var data = "{{attribute}}";
+										if (data != "") {
+											if(data == "True") {data = "<img height=15px width=15px src=\"static/images/true.png\"/>";}
+											else if(data == "False" || data == "No" ) {data = "<img height=15px width=15px src=\"static/images/false.png\"/>";}
+										
+											if(currentRowTitle == "Price Range" && col>0) {
+												data = "<img height=15px width=15px src=\"static/images/pricerange{{attribute}}.png\"/>";
+											}
+											else if(currentRowTitle == "Wi-Fi" && col>0) {
+												data = "<img height=15px width=18px src=\"static/images/{{attribute}}wifi.png\"/>";
+											}
+										}										
+										document.write("<td style=\"text-align:" + alignment + ";\">" + data + "</td>");
+										col ++;
+									{% endfor %}
+								</script>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<a href="#" onclick="displayBarChart(); return false;"><div id="comparison-barchart-heading" class="heading-unselected">Reviews Distribution</div></a>
+			<div id="comparison-barchart">
+				<div id="menu-selector-1">
+					<span class="glyphicon glyphicon-check"></span>&nbsp;&nbsp;<a href="#" onclick="menuSelected(1); return false;">Rating vs votes</a>
+				</div>
+				<div id="menu-selector-2">
+					<span class="glyphicon glyphicon-unchecked"></span>&nbsp;&nbsp;<a href="#" onclick="menuSelected(2); return false;">Businesses vs votes</a>
+				</div>
+				<div id="menu-selector-3">
+					<span class="glyphicon glyphicon-unchecked"></span>&nbsp;&nbsp;<a href="#" onclick="menuSelected(3); return false;">Businesses vs votes(stacked)</a>
+				</div>			
+			</div>
+			<a href="#" onclick="displayLinePlot(); return false;"><div id="comparison-lineplot-heading" class="heading-unselected">Reviews Over Time</div></a>
+			<div id="comparison-lineplot"></div>
+			<a href="#" onclick="displayScatterPlot(); return false;"><div id="comparison-scatterplot-heading" class="heading-unselected">Avg Reviews vs Count</div></a>
+			<div id="comparison-scatterplot"></div>
+		</div>
+        
+		<script src="{% static "js/jquery.min.js" %}" ></script>
+		<script src="{% static "js/d3.v3.js" %}" ></script>	
+		<script src="static/js/jquery-ui.min.js"></script>
+		<script src="static/js/jquery.dragtable.js"></script>
+		
+		<script>
+			$(document).ready(function() {
+				$('#comparison-table').dragtable({dragaccept:'.accept'});
+				$('#localStorageTable').dragtable({
+					persistState: function(table) {
+						if (!window.sessionStorage) return;
+						var ss = window.sessionStorage;
+						table.el.find('th').each(function(i) {
+							if(this.id != '') {table.sortOrder[this.id]=i;}
+						});
+						ss.setItem('tableorder',JSON.stringify(table.sortOrder));
+					},
+					restoreState: eval('(' + window.sessionStorage.getItem('tableorder') + ')')
+				});
+			});
+			
+			var businessIdArray = [];
+			var businessDetailsDictionary = {};
+			{% for business in businesses_array %}
+				businessIdArray.push('{{business.business_id}}');
+				businessDetailsDictionary['{{business.business_id}}'] = {};
+				businessDetailsDictionary['{{business.business_id}}']['name'] = '{{business.name}}';
+			{% endfor %}
+			
+// 			{% for review in reviews_array %}
+// 				console.log('{{ review }}');
+// 			{% endfor %}
+		
+		</script>
+
+		<script src="{% static "js/comparebusinesses.js" %}" ></script>
+    </body>
+</html>

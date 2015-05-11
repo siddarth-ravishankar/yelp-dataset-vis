@@ -7,7 +7,7 @@ app_path				=	os.path.join(project_path, "business")
 
 resources_path			=	os.path.join(app_path, "resources")
 
-dataset_path			=	os.path.join(project_path, "../data/yelp_dataset_challenge_academic_dataset_small")
+dataset_path			=	os.path.join(project_path, "../data/yelp_dataset_challenge_academic_dataset")
 
 business_dataset_path	=	os.path.join(dataset_path, "yelp_academic_dataset_business.json")
 
