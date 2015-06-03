@@ -27,9 +27,6 @@ function getBusinessesInBounds (latLngBounds) {
 		attributesDictionary['business-categories'] += selectedBusinesses[i].replace(/&/g, "_amp_") + ",";
 	}
 	
-	console.log("Attributes dictionary");
-	console.log(attributesDictionary);
-	
 	d3.json(createRequestURL(requestName, attributesDictionary), function(error, json) {
 
 		if (error) {
@@ -40,8 +37,7 @@ function getBusinessesInBounds (latLngBounds) {
 		copySelectedBusinessesListToCurrentBusinessesList();
 			
 		responseArray = json['response_object']
-		console.log(responseArray)
-	
+
 		map.removeLayer(markersGroup);		
 		markersGroup = new L.MarkerClusterGroup( { disableClusteringAtZoom: 1 } );
 		
@@ -63,9 +59,9 @@ function getBusinessesInBounds (latLngBounds) {
 			if (selectedClusterId != -1 && responseArray[selectedClusterId]['type'] == 'clustered') {
 				displayClusteredBusinessDetails (responseArray[selectedClusterId]);
 			}
-			else {
-				toggleInfoView();			
-			}
+// 			else {
+// 				toggleInfoView();			
+// 			}
 		}
 		
 	});

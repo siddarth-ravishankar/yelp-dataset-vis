@@ -21,7 +21,7 @@ function createBusinessMarkerForClusteredBusinesses (responseObject, index) {
 	});
 	
 	var clusteredMarker = new L.marker([responseObject['latitude'], responseObject['longitude']], {icon: customClusterIcon });
-	clusteredMarker.bindPopup(responseObject['count'] + " businesses here<br>Double click to explore", {offset: [0,-8] } );
+	clusteredMarker.bindPopup(responseObject['count'] + " businesses here<br>Double click to explore", {offset: [0,-13] } );
 	clusteredMarker.on('click', function(e) {		
 		if (compareBusinessesEnabled) {
 			
@@ -72,6 +72,7 @@ function createBusinessMarkersForIndividualBusinesses (responseObject) {
 			}
 			else {
 				displayBusinessDetails (businesses[e.target.options.id]);
+				selectedClusterId = -1;
 			}			
 			console.log(businesses[e.target.options.id])
 		});		

@@ -66,6 +66,17 @@ def compare_businesses(request):
 	
 	businesses_id_array = request.POST['businesses_array'].split(",")
 	
+	"""
+	
+	Not written as a function, but this part of the code queries details of all businesses that needs to be compared
+	Input:	Businesses that needs to be compared, obtained in CSV format from request
+	Output:	List of all businesses that are compared and a table of attribute values for comparison,
+			where rows represent individual business and columns represent individual attribute
+			Output is rendered as html page and not a json response
+	
+	"""
+	
+	
 	businesses_array = []
 	reviews_array = []
 	

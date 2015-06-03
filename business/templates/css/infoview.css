@@ -37,16 +37,32 @@
 	display: block;
 }
 
+#info-view #individual-info-view #scrollable {
+	max-height: 425px;
+	overflow-y: scroll;
+}
+
 #info-view #individual-info-view #rating-section #name {
 	position: relative;
 	padding: 10px;
 	font-family: "Lucida Sans Unicode";
     font-size: 18px;
     text-decoration: none;
-    width: inherit;
+    width: 300px;
     display: block;
     color: rgb(100,100,100);
     text-shadow: 2px 2px #EAEAEA;
+}
+
+#info-view #individual-info-view #rating-section #open {
+	position: absolute;
+	top: 0px;
+	padding-top: 5px;
+    left: 300px;
+    width: 40px;
+    height: 40px;
+    display: block;
+    transform: rotate(7deg);
 }
 
 #info-view #individual-info-view #rating-section #rating {
@@ -83,6 +99,52 @@
     color: #666;
 }
 
+#info-view #individual-info-view #rating-section #hours {
+	position: relative;
+	padding: 10px 0px 0px 10px;
+	width: inherit;
+    font-size: 15px;
+    display: block;
+    color: #666;
+}
+
+#info-view #individual-info-view #rating-section #hours table {
+	position: relative;
+	left: 15px;
+	padding: 10px 0px 0px 10px;
+	width: inherit;
+    font-size: 14px;
+    display: block;
+    color: #666;
+}
+
+#info-view #individual-info-view #rating-section table .left {
+    font-weight: bold;
+}
+
+#info-view #individual-info-view #rating-section table .right {
+    font-size: 14px;
+}
+
+#info-view #individual-info-view #rating-section #attributes {
+	position: relative;
+	padding: 10px 0px 0px 10px;	
+	width: inherit;
+    font-size: 15px;
+    display: block;
+    color: #666;
+}
+
+#info-view #individual-info-view #rating-section #attributes table {
+	position: relative;
+	padding: 10px 0px 0px 10px;
+	left: 15px;
+	width: inherit;
+    font-size: 14px;
+    display: block;
+    color: #666;
+}
+
 #info-view #clustered-info-view {
 	position: absolute;
 	width: inherit;
@@ -90,6 +152,7 @@
 	background-color: none;
 	z-index: 3;
 	display: block;
+	overflow-y: scroll;
 }
 
 /* 

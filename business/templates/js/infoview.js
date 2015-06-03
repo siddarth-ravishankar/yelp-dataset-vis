@@ -31,8 +31,91 @@ function displayBusinessDetails (business) {
 
 	var ratingSection = d3.select("#individual-info-view").select("#rating-section");
 	
-	ratingSection.select("#name").text(business['name']);
+	ratingSection.select("#name").html("<a target='_blank' href='http://www.yelp.com/search?find_desc=" + business['name'] + "&find_loc=" + business['full_address'] + "'>" + business['name'] + "</a>");
 	
+	if (business['open'] == true) {
+		ratingSection.select("#open").select("img").attr("src", "static/images/open.png");
+	}
+	else if (business['open'] == false) {
+		ratingSection.select("#open").select("img").attr("src", "static/images/closed.png");
+	}
+	else {
+		ratingSection.select("#open").select("img").attr("src", "");
+	}
+	
+	var hoursString = "";
+	
+	var daysList = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+	
+	for (var i=0; i<daysList.length; i++) {
+		if (daysList[i] in business['hours']) {
+			var openHour = business['hours'][daysList[i]]['open'];
+			var closeHour = business['hours'][daysList[i]]['close'];
+			if (parseInt(openHour.split(":")[0])>12) {
+				openHour = parseInt(openHour.split(":")[0])-12 + ":" + openHour.split(":")[1] + "pm";
+			}
+			else {
+				openHour = openHour + "am";
+			}
+			if (parseInt(closeHour.split(":")[0])>12) {
+				closeHour = parseInt(closeHour.split(":")[0])-12 + ":" + closeHour.split(":")[1] + "pm";
+			}
+			else {
+				closeHour = closeHour + "am";
+			}
+			hoursString += "<tr><td width=35% class='left'>" + daysList[i].substr(0,3) + "</td><td class='right'>" + openHour + " to " + closeHour + "</tr></td>";
+		}
+	}
+	
+	if (hoursString.length > 0) {
+		hoursString = "Business Hours<br><table id='hourstable'>"+hoursString+"</table>";
+		ratingSection.select("#hours").html(hoursString);
+		ratingSection.select("#hours").style("display","block");
+	}
+	else {
+		ratingSection.select("#hours").style("display","none");
+	}
+	
+	console.log(business['attributes']);
+	
+	var attributesString = "<table>";
+	
+	for (var key in business['attributes']) {
+		var formattedValue = "";
+		if (typeof business['attributes'][key] === "boolean") {			
+			if (business['attributes'][key] === false) {
+				formattedValue = "<img height=15px width=15px src=\"static/images/false.png\"/>";
+			}
+			else {
+				formattedValue = "<img height=15px width=15px src=\"static/images/true.png\"/>";
+			}
+		}
+		else if (typeof business['attributes'][key] === "object") {			
+			for(var subKey in business['attributes'][key]) {
+				if (business['attributes'][key][subKey] === true) {
+					formattedValue += subKey + ", ";
+				}
+			}
+			if (formattedValue.length > 0) {
+				formattedValue = formattedValue.substr(0, formattedValue.length-2);
+			}
+		}
+		else {
+			formattedValue = business['attributes'][key];
+		}
+		if(formattedValue.length > 0) {
+			formattedValue = formattedValue.replace(/_/g, " ");
+			attributesString += "<tr><td class='left' width=50%>" + key + "</td><td class='right' align='center'>" + formattedValue + "</tr></td>";	
+		}
+	}
+	attributesString += "</table>";
+						
+	ratingSection.select("#attributes").html("More Info<br>" + attributesString);
+	
+	console.log(ratingSection.select("#hours").style("height"));
+	
+	ratingSection.select("#attributes").style("top",(parseInt(ratingSection.select("#hours").style("top")) + parseInt(ratingSection.select("#hours").style("height"))) + "px");
+
 	var starRatingText = "<a href=\"#\" onclick=\"displayReviewsForBusiness('" + business['business_id'] + "'); return false;\">";
 	var ratingValue = business['stars'];
 	

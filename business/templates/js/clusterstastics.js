@@ -35,7 +35,7 @@ function addPriceDistributionBarChart () {
 	.style({"font-size":"10px","fill":"steelblue"});
 	
 	d3.select("#price-distribution-barchart").select("svg").append("text").attr({x: 140, y: svgHeight-3}).text("Price Range").style({"font-size":"12px","fill":"steelblue"});
-	d3.select("#price-distribution-barchart").select("svg").append("text").attr({x: 2, y: 140, transform: "rotate(270 10,140)"}).text("Businesses Count").style({"font-size":"12px","fill":"steelblue"});
+	d3.select("#price-distribution-barchart").select("svg").append("text").attr({x: 2, y: 140, transform: "rotate(270 0,130)"}).text("Businesses Count").style({"font-size":"12px","fill":"steelblue"});
 
 	d3.select("#price-distribution-barchart").select("svg").selectAll("image").data(xAxisData).enter()
 		.append("image").attr({
@@ -81,7 +81,7 @@ function addRatingsDistributionBarChart () {
 	.style({"font-size":"10px","fill":"steelblue"});
 	
 	d3.select("#cluster-ratings-distribution-chart").select("svg").append("text").attr({x: 150, y: svgHeight}).text("Stars").style({"font-size":"12px","fill":"steelblue"});
-	d3.select("#cluster-ratings-distribution-chart").select("svg").append("text").attr({x: 2, y: 140, transform: "rotate(270 10,140)"}).text("Businesses Count").style({"font-size":"12px","fill":"steelblue"});
+	d3.select("#cluster-ratings-distribution-chart").select("svg").append("text").attr({x: 2, y: 140, transform: "rotate(270 0,130)"}).text("Businesses Count").style({"font-size":"12px","fill":"steelblue"});
 
 	for(var i=0; i<xAxisData.length; i++) {
 		d3.select("#cluster-ratings-distribution-chart").select("svg")
@@ -175,6 +175,15 @@ function updateRatingsDistributionBarChart (responseObject) {
 		d3.select("#cluster-ratings-distribution-barchart-bar-"+i).transition().duration(500).attr({
 			y: (svgHeight-xAxisHeight) - (yAxisData[i] / maxYValue) * (svgHeight-xAxisHeight) + 15,
 			height: (yAxisData[i] / maxYValue) * (svgHeight-xAxisHeight)
+		});
+		
+		d3.select("#cluster-ratings-distribution-barchart-bar-"+i).on('dblclick', function() {
+			var selectedRatingRangeVal = xAxisData[this.id.split("-").pop()] * 2 - 1;
+			updateRatingRangeSlider (selectedRatingRangeVal, selectedRatingRangeVal);
+			$( "#rating-range-slider" ).slider({
+				values: [selectedRatingRangeVal, selectedRatingRangeVal]
+			});
+			explore(responseObject['boundary']['north'], responseObject['boundary']['west'], responseObject['boundary']['south'], responseObject['boundary']['east']);
 		});
 		 
 		d3.select("#cluster-ratings-distribution-barchart-bartext-"+i).transition().duration(500).attr({
